@@ -11,69 +11,74 @@ Output:
          $210,000.00           $10,250.00    $21,000     $241,250.00
 ```
 """
-from collections import namedtuple
+from dataclasses import dataclass
+from typing import Callable, TypeVar
 import sys
 
 # Input formats
-init_cost_fmt = "Input the initial cost of the {} house: "
-annual_fuel_cost_fmt = "What is the annual fuel cost of the {} house?: "
-tax_rate_fmt = "Tax rate of the {} house?: "
+INITAL_COST_FMT = "Input the initial cost of the {} house: "
+ANNUAL_FUEL_COST_FMT = "What is the annual fuel cost of the {} house?: "
+TAX_RATE_FMT = "Tax rate of the {} house?: "
 
 # Table formats
-dollar_fmt = "${:,.2f}"
-dollar_rounded_fmt = "${:,.0f}"
-table_fmt = "{init_cost:>20} {fuel_cost:>20} {taxes:>10} {total:>15}"
+DOLLAR_FMT = "${:,.2f}"
+DOLLAR_ROUNDED_FMT = "${:,.0f}"
+TABLE_FMT = "{init_cost:>20} {fuel_cost:>20} {taxes:>10} {total:>15}"
+
+# Type variables
+R = TypeVar("R")
 
 # Data types
-House = namedtuple("House", "init_cost annual_fuel_cost tax_rate")
-Bill = namedtuple("Bill", "init_cost fuel_cost taxes total")
-Houses = dict[str, House]
-Bills = dict[str, Bill]
-
-# Example data
-example_houses = {
-    "first": House(init_cost=175_000, annual_fuel_cost=2500, tax_rate=0.025),
-    "second": House(init_cost=200_000, annual_fuel_cost=2800, tax_rate=0.025),
-    "third": House(init_cost=210_000, annual_fuel_cost=2050, tax_rate=0.020),
-}
+@dataclass
+class House:
+    init_cost: int
+    annual_fuel_cost: int
+    tax_rate: float
 
 
-def int_input(text="> ") -> int:
+@dataclass
+class Bill:
+    init_cost: int
+    fuel_cost: int
+    taxes: float
+    total: float
+
+
+def cast_input(func: Callable[[str], R], err_text: str, input_text: str) -> R:
     while True:
         try:
-            return int(input(text))
+            return func(input(input_text))
         except ValueError:
-            print("Not a valid whole number!")
-        except KeyboardInterrupt:
-            sys.exit(1)
+            print(err_text)
 
 
-def float_input(text="> ") -> float:
-    while True:
-        try:
-            return float(input(text))
-        except ValueError:
-            print("Not a valid real number!")
-        except KeyboardInterrupt:
-            sys.exit(1)
+def int_input(input_text: str = "> ") -> int:
+    return cast_input(int, err_text="Not a valid whole number!", input_text=input_text)
 
 
-def input_three_houses() -> Houses:
+def float_input(input_text: str = "> ") -> float:
+    return cast_input(float, err_text="Not a valid real number!", input_text=input_text)
+
+
+def input_three_houses() -> list[House]:
     """
-    Take in input of 3 houses with proper error handling and type casting.
+    Take an input of 3 houses with proper error handling and type casting.
     """
-    houses = {}
+    houses = []
     for house_name in ("first", "second", "third"):
-        houses[house_name] = House(
-            init_cost=int_input(init_cost_fmt.format(house_name)),
-            annual_fuel_cost=int_input(annual_fuel_cost_fmt.format(house_name)),
-            tax_rate=float_input(tax_rate_fmt.format(house_name)),
-        )
-        print()  # Space between inputs.
+        try:
+            houses.append(House(
+                init_cost=int_input(INITAL_COST_FMT.format(house_name)),
+                annual_fuel_cost=int_input(ANNUAL_FUEL_COST_FMT.format(house_name)),
+                tax_rate=float_input(TAX_RATE_FMT.format(house_name)),
+            ))
+        except KeyboardInterrupt:
+            sys.exit(1)
+        print()  #  Add some space between the sets of inputs.
     return houses
 
 
-def calculate_bills(houses: Houses, *, years: int = 1) -> Bills:
+def calculate_bills(houses: list[House], *, years: int = 1) -> list[Bill]:
     """
     Calculate bills over x amount of years following problem description.
 
@@ -81,22 +86,22 @@ def calculate_bills(houses: Houses, *, years: int = 1) -> Bills:
     2. Calculate taxes for x years
     3. Add to total with both fuel and taxes.
     """
-    bills = {}
-    for house_name, (init_cost, annual_fuel_cost, tax_rate) in houses.items():
-        fuel_cost = annual_fuel_cost * years
-        taxes = init_cost * tax_rate * years
-        total = init_cost + fuel_cost + taxes
+    bills = []
+    for house in houses:
+        fuel_cost = house.annual_fuel_cost * years
+        taxes = house.init_cost * house.tax_rate * years
+        total = house.init_cost + fuel_cost + taxes
 
-        bills[house_name] = Bill(init_cost, fuel_cost, taxes, total)
+        bills.append(Bill(house.init_cost, fuel_cost, taxes, total))
     return bills
 
 
-def print_bills(houses: Bills) -> None:
+def print_bills(bills: list[Bill]) -> None:
     """
     Print a "recipt" table following the format of the example output.
     """
     print(
-        table_fmt.format(
+        TABLE_FMT.format(
             init_cost="INITITAL HOUSE COST",
             fuel_cost="ANNUAL FUEL COST",
             taxes="TAXES",
@@ -104,18 +109,25 @@ def print_bills(houses: Bills) -> None:
         )
     )
 
-    for house_name, (init_cost, fuel_cost, tax_rate, total) in houses.items():
+    for bill in bills:
         print(
-            table_fmt.format(
-                init_cost=dollar_fmt.format(init_cost),
-                fuel_cost=dollar_fmt.format(fuel_cost),
-                taxes=dollar_rounded_fmt.format(tax_rate),
-                total=dollar_fmt.format(total),
+            TABLE_FMT.format(
+                init_cost=DOLLAR_FMT.format(bill.init_cost),
+                fuel_cost=DOLLAR_FMT.format(bill.fuel_cost),
+                taxes=DOLLAR_ROUNDED_FMT.format(bill.taxes),
+                total=DOLLAR_FMT.format(bill.total),
             )
         )
 
 
 if __name__ == "__main__":
+    example_houses = [
+        House(init_cost=175_000, annual_fuel_cost=2500, tax_rate=0.025),
+        House(init_cost=200_000, annual_fuel_cost=2800, tax_rate=0.025),
+        House(init_cost=210_000, annual_fuel_cost=2050, tax_rate=0.020),
+    ]
+
+    # Dirty way to differenciate between taking input or using example data.
     if len(sys.argv) > 1:
         houses = input_three_houses()
     else:
