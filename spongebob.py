@@ -20,7 +20,7 @@ Imperative: TeStInG! dOeSn'T tHiS lOoK gRe8T?
 from itertools import cycle
 from typing import Iterable
 
-from more_itertools import partition
+from more_itertools import map_if, partition
 
 
 def cycle_case(iterable: Iterable) -> Iterable:
@@ -32,9 +32,21 @@ def spongebob_functional(text: str) -> str:
     cased_letters = (func(letter) for func, letter in cycle_case(letters))
 
     return "".join(
-        next(cased_letters) if letter.isalpha() else next(not_letters)
+        next(cased_letters) if str.isalpha(letter) else next(not_letters)
         for letter in text
     )
+
+
+class Cycle:
+    def __init__(self, functions):
+        self.iterable = cycle(functions)
+
+    def __call__(self, *args, **kwargs):
+        return next(self.iterable)(*args, **kwargs)
+
+
+def spongebob_functional_ish(text: str) -> str:
+    return "".join(map_if(text, pred=str.isalpha, func=Cycle((str.upper, str.lower))))
 
 
 def spongebob_imperative(text: str) -> str:
@@ -55,4 +67,5 @@ def spongebob_imperative(text: str) -> str:
 if __name__ == "__main__":
     EXAMPLE_TEXT = "Testing! Doesn't this look gre8t?"
     print("Functional:", spongebob_functional(EXAMPLE_TEXT))
+    print("Functional-ish:", spongebob_functional_ish(EXAMPLE_TEXT))
     print("Imperative:", spongebob_imperative(EXAMPLE_TEXT))
