@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
         clear()
         print(f"{player_move} vs {bot_move}")
-        if (winner := get_winner(player_move, bot_move)) :
+        if winner := get_winner(player_move, bot_move):
             print("You", "Won!" if winner == "player" else "Lost!")
             scores[winner] += 1
         else:

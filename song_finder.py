@@ -54,19 +54,15 @@ Raw Output:
 """
 from pathlib import Path
 
-EXTENTIONS = {'flac', 'mp3', 'm4a', 'ogg', 'opus', 'wav'}
+EXTENTIONS = {"flac", "mp3", "m4a", "ogg", "opus", "wav"}
 
 
 def subfolders(folder: Path):
-    return [path.name for path in folder.glob('*') if path.is_dir()]
+    return [path.name for path in folder.glob("*") if path.is_dir()]
 
 
 def songs_in(folder: Path):
-    songs = sorted(
-        song
-        for ext in EXTENTIONS
-        for song in folder.glob(f'*.{ext}')
-    )
+    songs = sorted(song for ext in EXTENTIONS for song in folder.glob(f"*.{ext}"))
     return {song.stem: song for song in songs}
 
 
@@ -77,25 +73,25 @@ def song_finder(music_folder: Path):
         for album in subfolders(music_folder / artist):
             artists[artist][album] = songs_in(music_folder / artist / album)
 
-        if (singles := songs_in(music_folder / artist)):
-            artists[artist]['Singles'] = singles
+        if singles := songs_in(music_folder / artist):
+            artists[artist]["Singles"] = singles
 
-    if (songs := songs_in(music_folder)):
-        artists['Unknown Artist'] = {}
-        artists['Unknown Artist']['Unknown Album'] = songs
+    if songs := songs_in(music_folder):
+        artists["Unknown Artist"] = {}
+        artists["Unknown Artist"]["Unknown Album"] = songs
 
     return artists
 
 
-if __name__ == '__main__':
-    music = song_finder(Path.home() / 'Music')
-    print('Artists:', *music, sep='\n    ')
+if __name__ == "__main__":
+    music = song_finder(Path.home() / "Music")
+    print("Artists:", *music, sep="\n    ")
 
     artist = list(music)[-1]
-    print(f'Albums for {artist}:', *music[artist], sep='\n    ')
+    print(f"Albums for {artist}:", *music[artist], sep="\n    ")
 
     album = list(music[artist])[0]
-    print(f'Songs in {album}:', *music[artist][album], sep='\n    ')
+    print(f"Songs in {album}:", *music[artist][album], sep="\n    ")
 
     song = list(music[artist][album])[0]
-    print(f'Path for song {song}:', music[artist][album][song], sep='\n    ')
+    print(f"Path for song {song}:", music[artist][album][song], sep="\n    ")

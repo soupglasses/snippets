@@ -22,11 +22,11 @@ getcontext().prec = args.precision
 a, b, c = Decimal(args.a), Decimal(args.b), Decimal(args.c)
 
 try:
-    top = ((b * b) - (4 * a * c)).sqrt()
+    top = (b * b - 4 * a * c).sqrt()
     bottom = 2 * a
-    x1 = ((-b) + top) / bottom
-    x2 = ((-b) - top) / bottom
-except:
+    x1 = (-b + top) / bottom
+    x2 = (-b - top) / bottom
+except ValueError:
     print(f"No valid solution for a={a}, b={b}, c={c}.")
 else:
     if x1 == x2:

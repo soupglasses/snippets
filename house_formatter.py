@@ -11,9 +11,9 @@ Output:
          $210,000.00           $10,250.00    $21,000     $241,250.00
 ```
 """
+import sys
 from dataclasses import dataclass
 from typing import Callable, TypeVar
-import sys
 
 # Input formats
 INITAL_COST_FMT = "Input the initial cost of the {} house: "
@@ -28,7 +28,7 @@ TABLE_FMT = "{init_cost:>20} {fuel_cost:>20} {taxes:>10} {total:>15}"
 # Type variables
 R = TypeVar("R")
 
-# Data types
+# Data classes
 @dataclass
 class House:
     init_cost: int
@@ -67,11 +67,13 @@ def input_three_houses() -> list[House]:
     houses = []
     for house_name in ("first", "second", "third"):
         try:
-            houses.append(House(
-                init_cost=int_input(INITAL_COST_FMT.format(house_name)),
-                annual_fuel_cost=int_input(ANNUAL_FUEL_COST_FMT.format(house_name)),
-                tax_rate=float_input(TAX_RATE_FMT.format(house_name)),
-            ))
+            houses.append(
+                House(
+                    init_cost=int_input(INITAL_COST_FMT.format(house_name)),
+                    annual_fuel_cost=int_input(ANNUAL_FUEL_COST_FMT.format(house_name)),
+                    tax_rate=float_input(TAX_RATE_FMT.format(house_name)),
+                )
+            )
         except KeyboardInterrupt:
             sys.exit(1)
         print()  #  Add some space between the sets of inputs.
@@ -120,7 +122,7 @@ def print_bills(bills: list[Bill]) -> None:
         )
 
 
-if __name__ == "__main__":
+def main():
     example_houses = [
         House(init_cost=175_000, annual_fuel_cost=2500, tax_rate=0.025),
         House(init_cost=200_000, annual_fuel_cost=2800, tax_rate=0.025),
@@ -135,3 +137,7 @@ if __name__ == "__main__":
 
     all_bills = calculate_bills(houses, years=5)
     print_bills(all_bills)
+
+
+if __name__ == "__main__":
+    main()

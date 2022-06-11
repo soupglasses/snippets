@@ -4,52 +4,55 @@
 Simple socks5 address parser written in python.
 
 """
+
+
 def socks_parse(address: str) -> dict:
     """
-        Socks5 address parser
+    Socks5 address parser
 
-        Takes in a socks5 address string and creates a dictionary of its
-        contents. If no port is given it defaults to 1080.
+    Takes in a socks5 address string and creates a dictionary of its
+    contents. If no port is given it defaults to 1080.
 
-        Example inputs:
-            >>> socks_parse('socks5://Username:Password@127.0.0.1:12345')
-            {'username': 'Username', 'password': 'Password', 'hostname': '127.0.0.1', 'port': '12345'}
+    Example inputs:
+        >>> socks_parse('socks5://Username:Password@127.0.0.1:12345')
+        {'username': 'Username', 'password': 'Password', 'hostname': '127.0.0.1', 'port': '12345'}
 
-            >>> socks_parse('socks5://127.0.0.1:12345')
-            {'username': '', 'password': '', 'hostname': '127.0.0.1', 'port': '12345'}
+        >>> socks_parse('socks5://127.0.0.1:12345')
+        {'username': '', 'password': '', 'hostname': '127.0.0.1', 'port': '12345'}
 
-            >>> socks_parse('localhost')
-            {'username': '', 'password': '', 'hostname': 'localhost', 'port': '1080'}
+        >>> socks_parse('localhost')
+        {'username': '', 'password': '', 'hostname': 'localhost', 'port': '1080'}
     """
-    if address.startswith('socks5://'):
+    if address.startswith("socks5://"):
         address = address[9:]
 
-    if '@' in address:
-        credentials, address = address.split('@')
-        if ':' in credentials:
-            username, password = credentials.split(':')
+    if "@" in address:
+        credentials, address = address.split("@")
+        if ":" in credentials:
+            username, password = credentials.split(":")
         else:
-            username, password = credentials, ''
+            username, password = credentials, ""
     else:
-        username, password = '', ''
+        username, password = "", ""
 
-    if ':' in address:
-        hostname, port = address.split(':')
+    if ":" in address:
+        hostname, port = address.split(":")
     elif address:
         hostname = address
-        port = '1080'
+        port = "1080"
     else:
-        hostname = ''
-        port = ''
+        hostname = ""
+        port = ""
 
     return {
-        'username': username,
-        'password': password,
-        'hostname': hostname,
-        'port': port,
+        "username": username,
+        "password": password,
+        "hostname": hostname,
+        "port": port,
     }
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

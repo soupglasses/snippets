@@ -12,13 +12,12 @@ Output:
 """
 import random
 
-MINE_CHAR = 'X'
-NEIGHBOURS = ((-1,-1), (-1,0), (-1,1),
-              (0,-1),          (0,1),
-              (1,-1),  (1,0),  (1,1))
+MINE_CHAR = "X"
+NEIGHBOURS = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+
 
 def gen_minefield(size, mines):
-    minefield = [[0]*size for _ in range(size)]
+    minefield = [[0] * size for _ in range(size)]
 
     for _ in range(mines):
         while True:
@@ -29,13 +28,14 @@ def gen_minefield(size, mines):
                 break
 
         for dx, dy in NEIGHBOURS:
-            if 0 <= x+dx <= size-1 and 0 <= y+dy <= size-1:
-                if not minefield[x+dx][y+dy] == MINE_CHAR:
-                    minefield[x+dx][y+dy] += 1
+            if 0 <= x + dx <= size - 1 and 0 <= y + dy <= size - 1:
+                if not minefield[x + dx][y + dy] == MINE_CHAR:
+                    minefield[x + dx][y + dy] += 1
 
     return minefield
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     minefield = gen_minefield(size=4, mines=2)
     for row in minefield:
         print(*row)

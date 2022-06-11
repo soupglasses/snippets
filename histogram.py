@@ -21,7 +21,7 @@ Output:
 from collections import Counter, defaultdict
 
 
-def histogram(data: list[int], *, step: int = 10, limit: int = 100) -> str:
+def histogram(data: list[int], *, step: int, limit: int) -> str:
     """
     Create a printable histogram based on the inputted list of values.
 
@@ -43,21 +43,25 @@ def histogram(data: list[int], *, step: int = 10, limit: int = 100) -> str:
     )
 
 
-if __name__ == "__main__":
+def main():
     # fmt: off
     data = [
-        14, 45, 78, 89, 23,
-        12, 52, 43, 14, 76,
-        87, 88, 87, 76, 76,
+        14, 45,  78, 89, 23,
+        12, 52,  43, 14, 76,
+        87, 88,  87, 76, 76,
         90, 99, 100, 23, 32,
-        41, 20, 45, 54, 52,
-        67, 89, 43, 21, 43,
-        56, 67, 67, 78, 59,
-        93, 33, 11, 1, 43,
-        55, 45, 67, 65, 54,
-        76, 67, 59, 95, 20,
-        34, 32, 37, 38, 30,
-        30, 45, 56, 56, 45,
+        41, 20,  45, 54, 52,
+        67, 89,  43, 21, 43,
+        56, 67,  67, 78, 59,
+        93, 33,  11,  1, 43,
+        55, 45,  67, 65, 54,
+        76, 67,  59, 95, 20,
+        34, 32,  37, 38, 30,
+        30, 45,  56, 56, 45,
     ]
     # fmt: on
-    print(histogram(data))
+    print(histogram(data, step=10, limit=100))
+
+
+if __name__ == "__main__":
+    main()

@@ -90,22 +90,14 @@ def make_table(
     if labels:
         output.append(
             format_line(
-                TABLE_FORMAT.data,
-                widths,
-                row=map(str, labels),
-                centered=centered
+                TABLE_FORMAT.data, widths, row=map(str, labels), centered=centered
             )
         )
         output.append(format_line(TABLE_FORMAT.middle, widths))
 
     for row in rows:
         output.append(
-            format_line(
-                TABLE_FORMAT.data,
-                widths,
-                row=map(str, row),
-                centered=centered
-            )
+            format_line(TABLE_FORMAT.data, widths, row=map(str, row), centered=centered)
         )
     output.append(format_line(TABLE_FORMAT.bottom, widths))
 
