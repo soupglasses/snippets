@@ -1,11 +1,14 @@
 """
-# Table Formatter
+Table Formatter - Python Discord Codejam 8 Qualifier
 
-My submission for the Summer Codejam 2021 qualifer[1].
+https://github.com/python-discord/cj8-qualifier
 
-1: https://github.com/python-discord/cj8-qualifier
+About:
+    You are required to write a function that creates and returns an ascii
+    table. Your table must use these characters for the border:
+    "│ ─ ┌ ┬ ┐ ├ ┼ ┤ └ ┴ ┘".
 
-Example output:
+Example Output:
     ┌────────────┬───────────┬─────────┐
     │ User       │ Messages  │ Role    │
     ├────────────┼───────────┼─────────┤
@@ -16,8 +19,10 @@ Example output:
     │ Joe        │ -12       │ Idk Tbh │
     └────────────┴───────────┴─────────┘
 """
+
 from collections import namedtuple
-from typing import Any, Iterable, Optional
+from collections.abc import Iterable
+from typing import Any, List, Optional
 
 FormatLine = namedtuple("FormatLine", "begin pad sep end")
 TableFormat = namedtuple("TableFormat", "top data middle bottom")
@@ -38,7 +43,7 @@ def center(text: str, length: int) -> str:
 
 def format_line(
     line: FormatLine,
-    widths: list,
+    widths: List,
     row: Optional[Iterable] = None,
     centered: bool = False,
 ) -> str:
@@ -60,8 +65,8 @@ def format_line(
 
 
 def make_table(
-    rows: list[list[Any]],
-    labels: Optional[list[Any]] = None,
+    rows: List[List[Any]],
+    labels: Optional[List[Any]] = None,
     centered: bool = False,
 ) -> str:
     """
@@ -90,14 +95,22 @@ def make_table(
     if labels:
         output.append(
             format_line(
-                TABLE_FORMAT.data, widths, row=map(str, labels), centered=centered
+                TABLE_FORMAT.data,
+                widths,
+                row=map(str, labels),
+                centered=centered
             )
         )
         output.append(format_line(TABLE_FORMAT.middle, widths))
 
     for row in rows:
         output.append(
-            format_line(TABLE_FORMAT.data, widths, row=map(str, row), centered=centered)
+            format_line(
+                TABLE_FORMAT.data,
+                widths,
+                row=map(str, row),
+                centered=centered
+            )
         )
     output.append(format_line(TABLE_FORMAT.bottom, widths))
 
