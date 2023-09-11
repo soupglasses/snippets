@@ -43,18 +43,18 @@ def spongebob_function_2(text: str) -> str:
 
 
 def spongebob_imperative(text: str) -> str:
-    letters = []
+    result = ""
     pos = 0
     for letter in text:
         if letter.isalpha():
             if pos % 2 == 0:
-                letters.append(letter.upper())
+                result += letter.upper()
             else:
-                letters.append(letter.lower())
+                result += letter.lower()
             pos += 1
         else:
-            letters.append(letter)
-    return "".join(letters)
+            result += letter
+    return result
 
 
 if __name__ == "__main__":
