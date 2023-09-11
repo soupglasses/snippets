@@ -1,7 +1,7 @@
 """
 # Spongebob text generator
 
-Playing around with functional over imperative apporaches to
+Playing around with functional over imperative approaches to
 programming. This example uses the Mocking Spongebob meme[1]
 as an inspiration. Where text will cycle between lower- and
 upper-case for each letter.
@@ -27,7 +27,7 @@ def cycle_case(iterable: Iterable) -> Iterable:
     return zip(cycle((str.upper, str.lower)), iterable)
 
 
-def spongebob_functional(text: str) -> str:
+def spongebob_function_1(text: str) -> str:
     not_letters, letters = partition(str.isalpha, text)
     cased_letters = (func(letter) for func, letter in cycle_case(letters))
 
@@ -37,16 +37,9 @@ def spongebob_functional(text: str) -> str:
     )
 
 
-class Cycle:
-    def __init__(self, functions):
-        self.iterable = cycle(functions)
-
-    def __call__(self, *args, **kwargs):
-        return next(self.iterable)(*args, **kwargs)
-
-
-def spongebob_functional_ish(text: str) -> str:
-    return "".join(map_if(text, pred=str.isalpha, func=Cycle((str.upper, str.lower))))
+def spongebob_function_2(text: str) -> str:
+    modifier = cycle((str.upper, str.lower))
+    return "".join(map_if(text, pred=str.isalpha, func=lambda char: next(modifier)(char)))
 
 
 def spongebob_imperative(text: str) -> str:
@@ -66,6 +59,6 @@ def spongebob_imperative(text: str) -> str:
 
 if __name__ == "__main__":
     EXAMPLE_TEXT = "Testing! Doesn't this look gre8t?"
-    print("Functional:", spongebob_functional(EXAMPLE_TEXT))
-    print("Functional-ish:", spongebob_functional_ish(EXAMPLE_TEXT))
+    print("Function 1:", spongebob_function_1(EXAMPLE_TEXT))
+    print("Function 2:", spongebob_function_2(EXAMPLE_TEXT))
     print("Imperative:", spongebob_imperative(EXAMPLE_TEXT))
